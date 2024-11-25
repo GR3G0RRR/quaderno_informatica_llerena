@@ -7,5 +7,12 @@
 </head>
 <body>
     <h1>esercizio 2</h1>
+    <hr>
+    <?php
+    $today = new DateTime("now", new DateTimeZone('Europe/Rome'));
+    echo $today ->format('h:i:s');
+    $ora=$today ->format('h');
+    echo "\nsono le $ora";
+    ?>
 </body>
 </html>
