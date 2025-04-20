@@ -15,7 +15,7 @@ if (!isset($_SESSION['user_id'])) {
     <title>Document</title>
 </head>
 <body>
-    <h1>Benvenuto <?php echo $_SESSION['ruolo']; ?>!</h1>
+    <h1>Benvenuto <?php echo $_SESSION['SELECT nome FROM utenti where user_id']; ?>!</h1>
     <button><a href="prenotazione">prenota viaggio</a></button>
     <a href="logout.php">Logout</a>
 </body>

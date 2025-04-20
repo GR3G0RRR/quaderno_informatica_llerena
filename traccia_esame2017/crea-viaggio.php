@@ -1,6 +1,10 @@
 <?php
 session_start();
 
+// DEBUG: Visualizza user_id e ruolo per controllo
+echo "User ID: " . ($_SESSION['user_id'] ?? 'Non impostato') . "<br>";
+echo "Ruolo: " . ($_SESSION['ruolo'] ?? 'Non impostato') . "<br>";
+
 // Verifica che l'utente sia loggato e sia un autista
 if (!isset($_SESSION['user_id']) || $_SESSION['ruolo'] != 'autista') {
     header("Location: login.php");
@@ -38,8 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     if ($sql->execute()) {
         // Viaggio creato con successo, fai il redirect all'area autista
-        header("Location: area-autista.php");  // Redirect all'area autista
-        exit(); // Termina lo script dopo il redirect
+        header("Location: area-autista.php");
+        exit();
     } else {
         $message = "Errore nella creazione del viaggio: " . $sql->error;
     }
@@ -63,7 +67,10 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 </head>
 <body>
     <h1>Crea Viaggio</h1>
-    <form action="crea_viaggio.php" method="POST">
+
+    <a href="area-autista.php">🔙 Torna all'Area Autista</a><br><br>
+
+    <form action="crea-viaggio.php" method="POST">
         <p>Città di Partenza:</p>
         <input type="text" name="citta_partenza" required>
 
@@ -77,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <input type="time" name="ora_partenza" required>
 
         <p>Contributo Economico (€):</p>
-        <input type="number" step="0.01" name="contributo_economico" required>
+        <input type="text" step="0.01" name="contributo_economico" required>
 
         <p>Tempo Stimato:</p>
         <input type="text" name="tempo_stimato" required>
