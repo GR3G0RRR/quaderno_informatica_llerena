@@ -65,8 +65,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <p>Password:</p>
         <input type="password" name="password" required>
 
-        <br><br>
+        <br>
+        <p>non hai un account? <a href="auth.html">registrati</a></p>
         <input type="submit" value="Accedi">
+
     </form>
 
     <?php if (isset($errore)) : ?>

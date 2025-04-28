@@ -46,7 +46,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <p>Email:</p>
     <input type="email" name="email" required><br>
     <p>Password:</p> 
-    <input type="password" name="password" required><br>
-    <p>Sei un docente?</p> <input type="checkbox" name="is_teacher"><br>
+    <input type="password" name="password" required>
+    <br><input type="checkbox" name="is_teacher"><p>Sei un docente?</p>
+    <p><a href="login.php">hai un account? accedi</a></p>
     <button type="submit">Registrati</button>
+
 </form>

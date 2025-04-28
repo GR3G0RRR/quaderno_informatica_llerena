@@ -35,18 +35,31 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $posti_disponibili = $_POST['posti_disponibili'];
     $stato = "aperto"; // Di default, il viaggio è "aperto"
 
-    // Usa prepared statement per evitare SQL injection
-    $sql = $conn->prepare("INSERT INTO viaggi (id_autista, citta_partenza, citta_destinazione, data_partenza, ora_partenza, contributo_economico, tempo_stimato, posti_disponibili, stato) 
-                           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $sql->bind_param("isssssiis", $id_autista, $citta_partenza, $citta_destinazione, $data_partenza, $ora_partenza, $contributo_economico, $tempo_stimato, $posti_disponibili, $stato);
+    // Costruisci la query completa manualmente
+$query_completa = "INSERT INTO viaggi (id_autista, citta_partenza, citta_destinazione, data_partenza, ora_partenza, contributo_economico, tempo_stimato, posti_disponibili, stato) 
+VALUES (" .
+    intval($id_autista) . ", '" .
+    $conn->real_escape_string($citta_partenza) . "', '" .
+    $conn->real_escape_string($citta_destinazione) . "', '" .
+    $conn->real_escape_string($data_partenza) . "', '" .
+    $conn->real_escape_string($ora_partenza) . "', " .
+    floatval($contributo_economico) . ", '" .
+    $conn->real_escape_string($tempo_stimato) . "', " .
+    intval($posti_disponibili) . ", '" .
+    $conn->real_escape_string($stato) . "');";
 
-    if ($sql->execute()) {
-        // Viaggio creato con successo, fai il redirect all'area autista
-        header("Location: area-autista.php");
-        exit();
-    } else {
-        $message = "Errore nella creazione del viaggio: " . $sql->error;
-    }
+// Poi prepara e esegui normalmente
+$sql = $conn->prepare("INSERT INTO viaggi (id_autista, citta_partenza, citta_destinazione, data_partenza, ora_partenza, contributo_economico, tempo_stimato, posti_disponibili, stato) 
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+$sql->bind_param("isssssiis", $id_autista, $citta_partenza, $citta_destinazione, $data_partenza, $ora_partenza, $contributo_economico, $tempo_stimato, $posti_disponibili, $stato);
+
+if ($sql->execute()) {
+    header("Location: area-autista.php");
+    exit();
+} else {
+    $message = "Errore nella creazione del viaggio: " . $sql->error;
+}
+
 
     $sql->close();
     $conn->close();

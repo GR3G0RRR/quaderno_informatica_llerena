@@ -56,8 +56,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             // Reindirizzo all'area corretta
             if ($is_teacher) {
+                //se sono docente mi porta nella pagina del docente
                 header("Location: area-docente.php");
             } else {
+                //in caso contrario mi porta nella pagina dello studente
                 header("Location: area-studente.php");
             }
             exit;

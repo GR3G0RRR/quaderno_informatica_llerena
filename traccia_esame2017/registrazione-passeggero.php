@@ -82,7 +82,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <p>Password:</p>
         <input type="password" name="password" required>
 
-        <br><br>
+        <br>
+        <p>sei un autista? <a href="registrazione-autista.php">registrati come autista</a></p>
         <input type="submit" value="Registrati">
     </form>
 </body>
