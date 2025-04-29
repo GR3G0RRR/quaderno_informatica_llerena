@@ -19,6 +19,18 @@ if ($conn->connect_error) {
     die("Connessione fallita: " . $conn->connect_error);
 }
 
+// Recupera i dati dell'utente loggato
+$id_utente = $_SESSION['user_id'];
+$stmt = $conn->prepare("SELECT nome, cognome, ruolo FROM utenti WHERE id_utente = ?");
+$stmt->bind_param("i", $id_utente);
+$stmt->execute();
+$result_utente = $stmt->get_result();
+$dati_utente = $result_utente->fetch_assoc();
+
+$nome = $dati_utente['nome'] ?? 'Utente';
+$cognome = $dati_utente['cognome'] ?? '';
+$ruolo = $dati_utente['ruolo'] ?? '';
+
 // Se riceve richiesta di cancellazione
 if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
     $id_viaggio = intval($_GET['delete']);
@@ -36,7 +48,6 @@ $sql = $conn->prepare("SELECT * FROM viaggi WHERE id_autista = ?");
 $sql->bind_param("i", $id_autista);
 $sql->execute();
 $result = $sql->get_result();
-
 ?>
 <!DOCTYPE html>
 <html lang="it">
@@ -46,7 +57,7 @@ $result = $sql->get_result();
     <title>Area Autista</title>
 </head>
 <body>
-    <h1>Benvenuto nell'area autista</h1>
+    <h1>Benvenuto <?php echo htmlspecialchars($nome . ' ' . $cognome); ?> ^_^</h1>
 
     <button><a href="crea-viaggio.php" style="text-decoration: none;">➕ Crea Viaggio</a></button>
     <button><a href="logout.php" style="text-decoration: none;">🚪 Logout</a></button>
@@ -88,3 +99,4 @@ $result = $sql->get_result();
     ?>
 </body>
 </html>
+        

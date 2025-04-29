@@ -1,10 +1,6 @@
 <?php
 session_start();
 
-// DEBUG: Visualizza user_id e ruolo per controllo
-echo "User ID: " . ($_SESSION['user_id'] ?? 'Non impostato') . "<br>";
-echo "Ruolo: " . ($_SESSION['ruolo'] ?? 'Non impostato') . "<br>";
-
 // Verifica che l'utente sia loggato e sia un autista
 if (!isset($_SESSION['user_id']) || $_SESSION['ruolo'] != 'autista') {
     header("Location: login.php");
@@ -13,6 +9,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['ruolo'] != 'autista') {
 
 $message = "";
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    // Dati connessione
     $servername = "localhost";
     $username = "root";
     $password = "";
@@ -24,8 +21,22 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         die("Connessione fallita: " . $conn->connect_error);
     }
 
+    // Recupera l'id_autista corretto dalla tabella autisti
+    $user_id = $_SESSION['user_id'];
+    $stmt = $conn->prepare("SELECT id_autista FROM autisti WHERE id_utente = ?");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $autista = $result->fetch_assoc();
+    $stmt->close();
+
+    if (!$autista) {
+        die("Non sei registrato come autista.");
+    }
+
+    $id_autista = $autista['id_autista'];
+
     // Recupera i dati dal form
-    $id_autista = $_SESSION['user_id'];  // L'ID autista loggato
     $citta_partenza = $_POST['citta_partenza'];
     $citta_destinazione = $_POST['citta_destinazione'];
     $data_partenza = $_POST['data_partenza'];
@@ -33,33 +44,18 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $contributo_economico = $_POST['contributo_economico'];
     $tempo_stimato = $_POST['tempo_stimato'];
     $posti_disponibili = $_POST['posti_disponibili'];
-    $stato = "aperto"; // Di default, il viaggio è "aperto"
+    $stato = "aperto"; // Di default
 
-    // Costruisci la query completa manualmente
-$query_completa = "INSERT INTO viaggi (id_autista, citta_partenza, citta_destinazione, data_partenza, ora_partenza, contributo_economico, tempo_stimato, posti_disponibili, stato) 
-VALUES (" .
-    intval($id_autista) . ", '" .
-    $conn->real_escape_string($citta_partenza) . "', '" .
-    $conn->real_escape_string($citta_destinazione) . "', '" .
-    $conn->real_escape_string($data_partenza) . "', '" .
-    $conn->real_escape_string($ora_partenza) . "', " .
-    floatval($contributo_economico) . ", '" .
-    $conn->real_escape_string($tempo_stimato) . "', " .
-    intval($posti_disponibili) . ", '" .
-    $conn->real_escape_string($stato) . "');";
+    // Query per inserire il viaggio
+    $sql = $conn->prepare("INSERT INTO viaggi (id_autista, citta_partenza, citta_destinazione, data_partenza, ora_partenza, contributo_economico, tempo_stimato, posti_disponibili, stato) 
+                           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $sql->bind_param("isssssiis", $id_autista, $citta_partenza, $citta_destinazione, $data_partenza, $ora_partenza, $contributo_economico, $tempo_stimato, $posti_disponibili, $stato);
 
-// Poi prepara e esegui normalmente
-$sql = $conn->prepare("INSERT INTO viaggi (id_autista, citta_partenza, citta_destinazione, data_partenza, ora_partenza, contributo_economico, tempo_stimato, posti_disponibili, stato) 
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-$sql->bind_param("isssssiis", $id_autista, $citta_partenza, $citta_destinazione, $data_partenza, $ora_partenza, $contributo_economico, $tempo_stimato, $posti_disponibili, $stato);
-
-if ($sql->execute()) {
-    header("Location: area-autista.php");
-    exit();
-} else {
-    $message = "Errore nella creazione del viaggio: " . $sql->error;
-}
-
+    if ($sql->execute()) {
+        $message = "Viaggio creato con successo!";
+    } else {
+        $message = "Errore nella creazione del viaggio: " . $sql->error;
+    }
 
     $sql->close();
     $conn->close();
@@ -75,6 +71,9 @@ if ($sql->execute()) {
     <script>
         <?php if (!empty($message)) : ?>
             alert(<?php echo json_encode($message); ?>);
+            <?php if (strpos($message, "successo") !== false) : ?>
+                window.location.href = "area-autista.php"; // Torna all'area autista se creazione avvenuta
+            <?php endif; ?>
         <?php endif; ?>
     </script>
 </head>

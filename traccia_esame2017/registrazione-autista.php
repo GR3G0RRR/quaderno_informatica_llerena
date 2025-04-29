@@ -88,6 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <p>Veicolo: <input type="text" name="veicolo" required></p>
         <p>Targa veicolo: <input type="text" name="targa_veicolo" required></p>
         <p>sei un passeggero? <a href="registrazione-passeggero.php">registrati come passeggero</a></p>
+        <p>hai un account? <a href="login.php">accedi</a></p>
         <p><input type="submit" value="Registrati"></p>
     </form>
 

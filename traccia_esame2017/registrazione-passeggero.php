@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <?php if (!empty($message)) : ?>
             alert(<?php echo json_encode($message); ?>);
             <?php if ($redirect) : ?>
-                window.location.href = "login.html";
+                window.location.href = "login.php";
             <?php endif; ?>
         <?php endif; ?>
     </script>
@@ -84,6 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
         <br>
         <p>sei un autista? <a href="registrazione-autista.php">registrati come autista</a></p>
+        <p>hai un account? <a href="login.php">accedi</a></p>
         <input type="submit" value="Registrati">
     </form>
 </body>
