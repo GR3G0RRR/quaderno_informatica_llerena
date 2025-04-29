@@ -1,16 +1,22 @@
 <?php
-$message = "";
+$message = ""; //dichiaro un messaggio vuoto momentaneamente
 $redirect = false; // Variabile per il redirect
-
+//verifico che il form sia in metodo post
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
+    //nome server:
     $servername = "localhost";
+    //nome utente dell'account con privilegi
     $username = "root";
+    //password dell'account con privilegi
     $password = "";
+    //nome del database
     $dbname = "carpooling";
 
-    // Connessione al database
+    // Connessione al database coi dati scritti prima
     $conn = new mysqli($servername, $username, $password, $dbname);
+    //se la connessione falisce
     if ($conn->connect_error) {
+        //risulato del database:
         die("Connessione fallita: " . $conn->connect_error);
     }
 
@@ -21,22 +27,25 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $documento = $_POST['documento'];
     $email = $_POST['email'];
     $telefono = $_POST['telefono'];
+    //password hash è un metodo per crittografare la password
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hash della password
     $ruolo = "passeggero"; // Ruolo specifico per il passeggero
 
-    // Usa Prepared Statements per maggiore sicurezza
+    // Uso degli Statements per maggiore sicurezza, mi preparo la query
     $sql_utente = $conn->prepare("INSERT INTO utenti (nome, cognome, data_nascita, documento, email, telefono, password, ruolo) 
                                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    //? = wild mask ovvero copro i valori.
     $sql_utente->bind_param("ssssssss", $nome, $cognome, $data_nascita, $documento, $email, $telefono, $password, $ruolo);
-
+    //verifico che la query venga eseguita
     if ($sql_utente->execute()) {
         $message = "Registrazione avvenuta con successo!";
         $redirect = true; // Flag per il redirect
     } else {
         $message = "Errore nella registrazione: " . $sql_utente->error;
     }
-
+    //chiudo l'esecuzione della query
     $sql_utente->close();
+    //chiudo la connessione
     $conn->close();
 }
 ?>
@@ -48,9 +57,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrazione Passeggero</title>
     <script>
-        // Mostra l'alert e reindirizza se necessario
+        // verifico se il messaggio iniziale non è vuoto
         <?php if (!empty($message)) : ?>
+            //stampo il messaggio tramite pop-up
             alert(<?php echo json_encode($message); ?>);
+            //
             <?php if ($redirect) : ?>
                 window.location.href = "login.php";
             <?php endif; ?>
