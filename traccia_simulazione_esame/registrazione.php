@@ -15,22 +15,19 @@ $dbname = 'corsi_linguistici';
 $conn = new mysqli($servername, $username, $password, $dbname);
 // verifico se ce un errore con la connessione al database
 if ($conn->connect_error) {
-    //in caso di errore 'die" interrompe l'esecuzione dello script mostrando il messaggio specifico dal database
+    //in caso di errore interrompe l'esecuzione dello script
     die('Connessione fallita: ' . $conn->connect_error);
 }
-//$_server[request_method] è una variabile speciale che ti dice con quale metodo http è stata fatta la richiesta di invio del form
+//controllo che la richiestia sia in post
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    //dichiaro username e prendo dalla pagina html il valore nel campo name = "username" che poi verrà memorizzato in $username;
     $username = $_POST['username'];
-    //dichiaro email e prendo dalla pagina html il valore del campo name = "email" che poi verrà memorizzato in $email;
-    $email = $_POST['email'];
-    
+    $email = $_POST['email'];  
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
     $is_teacher = isset($_POST['is_teacher']) ? 1 : 0;
-
+    //uso una query preparata (statement)
     $stmt = $conn->prepare("INSERT INTO utenti (username,email, password, is_teacher) VALUES (?,?, ?, ?)");
     $stmt->bind_param("sssi", $username,$email, $password, $is_teacher);
-
+    //controllo che venga eseguita
     if ($stmt->execute()) {
         echo "Registrazione completata. <a href='login.php'>Vai al login</a>";
     } else {

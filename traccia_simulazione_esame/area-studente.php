@@ -6,7 +6,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['is_teacher']) {
     header("Location: login.php");
     exit;
 }
-
+//variabili di sessione
 $studente_id = $_SESSION['user_id'];
 $username = $_SESSION['username'];
 
@@ -16,8 +16,9 @@ if ($conn->connect_error) {
     die("Connessione fallita: " . $conn->connect_error);
 }
 
-// Se ha cliccato su "Iscriviti"
+//controlla il metodo e se corso_id esiste
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['corso_id'])) {
+    //converte in un intero
     $corso_id = intval($_POST['corso_id']);
 
     // Verifica se già iscritto

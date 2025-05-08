@@ -21,19 +21,13 @@ if ($conn->connect_error) {
     die('Connessione fallita: ' . $conn->connect_error);
 }
 
-//$_server[request_method] è una variabile speciale che ti dice con quale metodo http è stata fatta la richiesta di invio del form
+//verifico se è in metodo post
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    //dichiaro email e prendo dalla pagina html il valore del campo name = "email" che poi verrà memorizzato in $email;
     $email = $_POST['email'];
-    //dichiaro $password inserita e prendo dalla pagina html il valore del campo name = "password" che poi verrà memorizzato in $password;
     $passwordInserita = $_POST['password'];
-
     //utilizzo le query preparate perchè sono importanti per la sicurezza (ad esempio per evitare attacchi sql injection).
-    //$conn-> prepare(...) questo comando prepara una query per essere eseguita in modo sicuro.
-    //la query prende id, password, is_teacher, username dalla tabella utente dove l'email corrisponde a un certo valore.
     $stmt = $conn->prepare("SELECT id, password, is_teacher, username FROM utenti WHERE email = ?");
     //questo comando è un metodo che lega i paramteri ai segnaposti ? nella query preparata.
-    //"s" indica il tipo di dato che sto passando, in questo caso s sta per stringa.
     $stmt->bind_param("s", $email);
     //eseguo la query che avevo preparato.
     $stmt->execute();
@@ -44,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($stmt->num_rows === 1) {
         //associa i colonnati dei risultati della query alle variabili php.
         $stmt->bind_result($id, $hashed_password, $is_teacher, $username);
-        //fetch() è utilizzato per estrarre i dati dalla query e popolare le variabili che ho precedemente legato tramite bind_result(...)
+        //estraggo i dati dalla query
         $stmt->fetch();
 
         
@@ -84,7 +78,7 @@ $conn->close();
 </head>
 <body>
     <h2>Login</h2>
-
+    <!--messaggio di errore-->
     <?php if (isset($errore)): ?>
         <p style="color: red;"><?php echo $errore; ?></p>
     <?php endif; ?>

@@ -27,14 +27,20 @@ $result = $stmt->get_result();
 $corsi_table = "";
 if ($result->num_rows > 0) {
     $corsi_table .= "<table border='1' cellpadding='8' cellspacing='0'>";
-    $corsi_table .= "<tr><th>Nome Corso</th><th>Descrizione</th><th>Data Creazione</th></tr>";
+    $corsi_table .= "<tr><th>Nome Corso</th><th>Descrizione</th><th>Data Creazione</th><th>Azioni</th></tr>";
     while ($row = $result->fetch_assoc()) {
-        $corso_id = $row['id']; // Ottieni l'ID del corso
+        $corso_id = $row['id'];
         $corsi_table .= "<tr>";
-        // Rendi il nome del corso un link che porta alla pagina dei dettagli
         $corsi_table .= "<td><a href='corso-docente.php?id=$corso_id'>" . htmlspecialchars($row['nome_corso']) . "</a></td>";
+        //serve a proteggere il tuo sito da problemi di sicurezza e visualizzazione, convertendo caratteri speciali in entità HTML sicure.
         $corsi_table .= "<td>" . htmlspecialchars($row['descrizione']) . "</td>";
         $corsi_table .= "<td>" . htmlspecialchars($row['data_creazione']) . "</td>";
+        $corsi_table .= "<td>
+            <form method='POST' action='elimina-corso.php' onsubmit=\"return confirm('Sei sicuro di voler eliminare questo corso?');\" style='display:inline;'>
+                <input type='hidden' name='corso_id' value='$corso_id'>
+                <button type='submit'>Elimina</button>
+            </form>
+        </td>";
         $corsi_table .= "</tr>";
     }
     $corsi_table .= "</table>";
@@ -45,7 +51,6 @@ if ($result->num_rows > 0) {
 $stmt->close();
 $conn->close();
 ?>
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -60,8 +65,6 @@ $conn->close();
     <button><a href="crea-corso.php">Crea nuovo corso</a></button>
     <br><br>
     <?php echo $corsi_table; ?>
-
     <br><a href="logout.php">Logout</a>
 </body>
 </html>
-
