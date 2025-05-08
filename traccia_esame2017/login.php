@@ -63,6 +63,9 @@ $conn->close();
         <label>Password:</label><br>
         <input type="password" name="password" required><br><br>
         <button type="submit">Login</button>
+        <p>non hai un account? registrati <a href="registrazione-autista.php">autista</a> o <a href="registrazione-passeggero.php">passeggero</a></p>
+        <p><a href="../index.html">torna all'indice generale (quaderno informatica)</a></p>
+
     </form>
 </body>
 </html>

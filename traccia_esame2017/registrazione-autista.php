@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 </head>
 <body>
     <h1>Registrazione Autista</h1>
-
+    <p><a href="login.php"><- indietro</a></p>
     <form action="registrazione-autista.php" method="post">
         <p>Nome: <input type="text" name="nome" required></p>
         <p>Cognome: <input type="text" name="cognome" required></p>
@@ -100,5 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             <?php endif; ?>
         </script>
     <?php endif; ?>
+    <p><a href="../index.html">torna all'indice generale (quaderno informatica)</a></p>
+
 </body>
 </html>

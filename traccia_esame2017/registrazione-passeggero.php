@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 </head>
 <body>
     <h1>Registrazione Passeggero</h1>
-
+    <p><a href="login.php"><- indietro</a></p>
     <form action="registrazione-passeggero.php" method="post">
         <p>Nome:</p>
         <input type="text" name="nome" required>
@@ -98,5 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         <p>hai un account? <a href="login.php">accedi</a></p>
         <input type="submit" value="Registrati">
     </form>
+    <p><a href="../index.html">torna all'indice generale (quaderno informatica)</a></p>
+
 </body>
 </html>

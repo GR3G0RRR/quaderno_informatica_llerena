@@ -94,5 +94,6 @@ $conn->close();
     </form>
 
     <p>Non sei registrato? <a href="registrazione.php">Registrati</a></p>
+    <p><a href="../index.html">torna all'indice generale (quaderno informatica)</a></p>
 </body>
 </html>

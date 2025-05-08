@@ -47,5 +47,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <br><input type="checkbox" name="is_teacher"><p>Sei un docente?</p>
     <p><a href="login.php">hai un account? accedi</a></p>
     <button type="submit">Registrati</button>
-
+    <p><a href="../index.html">torna all'indice generale (quaderno informatica)</a></p>
+    
 </form>
